@@ -31,6 +31,10 @@ func main() {
 		userHandler.Create(c)
 	})
 
+	router.POST("/login", func(c *gin.Context) {
+		userHandler.Login(c)
+	})
+
 	router.Run(":8000")
 
 }

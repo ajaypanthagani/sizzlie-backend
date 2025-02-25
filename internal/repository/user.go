@@ -11,11 +11,21 @@ import (
 // UserRepository is the interface for interacting with the users table.
 type UserRepository interface {
 	Create(user *models.User) (*models.User, error)
+	SignIn(email, password string) (*models.User, error)
 }
 
 // UserRepositoryImpl is an implementation of the UserRepository interface.
 type UserRepositoryImpl struct {
 	db *sql.DB // Database connection
+}
+
+// SignIn implements UserRepository.
+func (repo *UserRepositoryImpl) SignIn(email string, password string) (*models.User, error) {
+	user, err := models.Users(models.UserWhere.Email.EQ(email)).One(context.Background(), repo.db)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 // NewUserRepository creates and returns a new UserRepositoryImpl instance.

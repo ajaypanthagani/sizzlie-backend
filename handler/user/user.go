@@ -72,6 +72,43 @@ func (h *UserHandler) Create(c *gin.Context) {
 
 }
 
+// SignInHandler responds to a POST request with a personalized greeting message.
+func (h *UserHandler) Login(c *gin.Context) {
+	var createUserReq CreateUserRequest
+
+	if err := c.ShouldBindJSON(&createUserReq); err != nil {
+		c.JSON(400, &Error{
+			Code:    400,
+			Message: "Unable to read create user request",
+		})
+		return
+	}
+
+	if createUserReq.Email == "" || createUserReq.Password == "" {
+		c.JSON(400, CreateUserResponse{
+			Error: &Error{
+				Code:    400,
+				Message: "email and password must not be empty",
+			},
+		})
+		return
+	}
+
+	user, err := h.repo.SignIn(createUserReq.Email, createUserReq.Password)
+	if err != nil {
+		c.JSON(500, CreateUserResponse{
+			Error: &Error{
+				Code:    500,
+				Message: "Unable to login user",
+			},
+		})
+		return
+	}
+
+	c.JSON(200, user)
+
+}
+
 func NewUserHandler(repo repository.UserRepository) *UserHandler {
 	return &UserHandler{repo: repo}
 }
