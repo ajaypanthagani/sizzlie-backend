@@ -1,0 +1,8 @@
+CREATE TABLE recipes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    description VARCHAR(100),
+    videoSrc VARCHAR(1000) NULL,
+    thumbnail VARCHAR(1000) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
